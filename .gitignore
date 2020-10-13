@@ -1,0 +1,4 @@
+db/secrets.txt
+frontend/admin-password.txt
+*.iml
+.idea/

@@ -1,0 +1,31 @@
+version: '3.9'
+
+services:
+  frontend:
+    image: quetwo/cf-docker-skel:latest
+    build:
+      context: frontend/
+    depends_on:
+      - db
+    volumes:
+      - ./frontend/webroot:/var/www
+    ports:
+      - "8888:8888"
+    secrets:
+      - admin_password
+  db:
+    image: mysql:5.7
+    env_file:
+      - ./db/secrets.txt
+    volumes:
+      - vol_db:/var/lib/mysql
+      - ./db/dump:/docker-entrypoint-initdb.d
+
+# Mounts
+volumes:
+  vol_db:
+
+# Secrets
+secrets:
+  admin_password:
+    file: ./frontend/admin-password.txt

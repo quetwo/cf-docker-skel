@@ -1,0 +1,10 @@
+FROM lucee/lucee:5.3
+
+COPY ./admin-password.txt /run/secrets/admin_password
+RUN rm -R /var/www
+RUN ln -sf /dev/stdout /opt/lucee/web/logs/application.log && ln -sf /dev/stdout /opt/lucee/web/logs/exception.log
+RUN echo "mv /run/secrets/admin_password /opt/lucee/server/lucee-server/context/password.txt" >> /usr/local/tomcat/bin/setenv.sh
+
+COPY ./webroot/ /var/www/
+
+EXPOSE 8888
