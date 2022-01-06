@@ -1,6 +1,11 @@
 version: '3.9'
 
 services:
+
+  # Front-End configuration for the running application
+  # Exposed for all HTTP and HTTPS traffic, routed via port 8888
+  # ---------------
+  # Make sure to create ./frontend/secrets.txt
   frontend:
     image: quetwo/cf-docker-skel:latest
     build:
@@ -9,23 +14,47 @@ services:
       - db
     volumes:
       - ./frontend/webroot:/var/www
-    ports:
-      - "8888:8888"
-    secrets:
-      - admin_password
+    env_file:
+      - ./frontend/secrets.txt
+      - ./db/secrets_shared.txt
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.entrypoints=web"
+      - "traefik.http.routers.frontends.entrypoints=websecure"
+      - "traefik.http.routers.frontends.tls=true"
+      - "traefik.http.services.web.loadbalancer.server.port=8888"
+
+  # MySQL/Maria Database Configuration
+  # Ports 3306 Exposed for local traffic only
+  # -----------------
+  # Make sure to create ./db/secrets.txt and ./db/secrets_shared.txt
   db:
-    image: mysql:5.7
+    image: mariadb:10
     env_file:
       - ./db/secrets.txt
+      - ./db/secrets_shared.txt
     volumes:
       - vol_db:/var/lib/mysql
       - ./db/dump:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+
+  # Reverse Proxy to handle HTTP/HTTPS traffic.
+  # Port 8080 is exposed to show diag info.  See /proxy/config.toml for proxy config
+  proxy:
+    image: traefik:v2.5
+    depends_on:
+      - frontend
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./proxy/acme.json:/shared/acme.json
+      - ./proxy/config.toml:/etc/traefik/traefik.toml
+      - ./proxy/logs/:/shared/logs/
 
 # Mounts
 volumes:
   vol_db:
-
-# Secrets
-secrets:
-  admin_password:
-    file: ./frontend/admin-password.txt
