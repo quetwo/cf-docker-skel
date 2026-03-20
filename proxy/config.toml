@@ -56,7 +56,6 @@
   # Optional
   # Default: os.Stdout
   #
-  filePath = "/shared/logs/traefik.log"
 
   # Format is either "json" or "common".
   #
@@ -83,7 +82,6 @@
   # Optional
   # Default: os.Stdout
   #
-  filePath = "/shared/logs/access.log"
 
   # Format is either "json" or "common".
   #
@@ -142,3 +140,11 @@
   # Default: true
   #
   exposedByDefault = false
+
+[certificatesResolvers.myresolver.acme]
+    email = "user@host.com"
+    storage = "/shared/certs/acme.json"
+    caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
+    [certificatesResolvers.myresolver.acme.httpChallenge]
+        # used during the challenge
+        entryPoint = "web"

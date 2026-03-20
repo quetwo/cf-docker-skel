@@ -1,4 +1,6 @@
 db/secrets.txt
-frontend/admin-password.txt
+db/secrets_shared.txt
+frontend/secrets.txt
+proxy/logs/*
 *.iml
 .idea/
