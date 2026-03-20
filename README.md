@@ -15,10 +15,10 @@ be an export or backup of an existing database.  These SQL statements are ONLY r
 8. Modify the `docker-compose.yml` file to change the `- "traefik.http.routers.frontends.tls.domains[0].main=dev.host.com"`
    on line 24 to march your domain name.  This is used to generate a certificate with that hostname.
 9. Update the `proxy/config.toml` to include your email address near the end of the file. 
-8. Modify the `docker-compose.yml` file to change the `quetwo/cf-docker-skel` to match your DockerHub username and 
+10. Modify the `docker-compose.yml` file to change the `quetwo/cf-docker-skel` to match your DockerHub username and 
 project name.  
-9. Launch the Docker image.  `docker-compose up`
-10. To shut down the server, press [CTL][C].   To re-run, enter the `docker-compose up` command.
+11. Launch the Docker image.  `docker-compose up`
+12. To shut down the server, press [CTL][C].   To re-run, enter the `docker-compose up` command.
 
 ### Deploying to production
 1. Get a DockerHub repository setup as a place to stage your images.
